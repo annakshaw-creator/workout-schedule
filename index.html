@@ -226,19 +226,31 @@
     .add-submit:active { opacity: 0.8; }
 
     .notes-section {
-      margin-top: 12px;
+      margin-top: 8px;
       border-top: 1px solid var(--border);
-      padding-top: 10px;
+      padding-top: 4px;
     }
 
-    .notes-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
+    .notes-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       color: var(--muted);
-      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 0 4px;
+      font-family: inherit;
     }
+    .notes-trigger.has-note { color: var(--text); font-weight: 500; }
+
+    .notes-body {
+      display: none;
+      margin-top: 6px;
+    }
+    .notes-body.open { display: block; }
 
     .notes-input {
       width: 100%;
@@ -343,17 +355,21 @@
         <button class="add-submit" onclick="submitAdd('${day.key}')">Add</button>
       </div>
       <div class="notes-section">
-        <div class="notes-label">Notes</div>
-        <textarea class="notes-input" id="notes-${day.key}" placeholder="How'd it go?">${store[day.key].notes}</textarea>
+        <button class="notes-trigger" id="notes-trigger-${day.key}" onclick="toggleNotes('${day.key}')">＋ Add note</button>
+        <div class="notes-body" id="notes-body-${day.key}">
+          <textarea class="notes-input" id="notes-${day.key}" placeholder="How'd it go?">${store[day.key].notes}</textarea>
+        </div>
       </div>
     `;
 
     document.getElementById('days-container').appendChild(card);
     renderList(day.key);
+    updateNotesTrigger(day.key);
 
     document.getElementById('notes-' + day.key).addEventListener('input', e => {
       store[day.key].notes = e.target.value;
       save(store);
+      updateNotesTrigger(day.key);
     });
   });
 
@@ -420,6 +436,33 @@
 
   function escHtml(s) {
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function toggleNotes(key) {
+    const body = document.getElementById('notes-body-' + key);
+    const opening = !body.classList.contains('open');
+    body.classList.toggle('open');
+    if (opening) document.getElementById('notes-' + key).focus();
+    updateNotesTrigger(key);
+  }
+
+  function updateNotesTrigger(key) {
+    const trigger = document.getElementById('notes-trigger-' + key);
+    const body = document.getElementById('notes-body-' + key);
+    if (!trigger) return;
+    const isOpen = body.classList.contains('open');
+    const notes = store[key].notes.trim();
+    if (isOpen) {
+      trigger.textContent = '▲ Done';
+      trigger.className = 'notes-trigger has-note';
+    } else if (notes) {
+      const preview = notes.length > 38 ? notes.slice(0, 38) + '…' : notes;
+      trigger.textContent = '📝 ' + preview;
+      trigger.className = 'notes-trigger has-note';
+    } else {
+      trigger.textContent = '＋ Add note';
+      trigger.className = 'notes-trigger';
+    }
   }
 </script>
 
