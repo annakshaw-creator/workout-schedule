@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Workout">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  <title>Weekly Workout</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #4f46e5;
+      --accent-light: #eef2ff;
+
+      --fast-bg: #faf5ff; --fast-fg: #7c3aed;
+      --run-bg: #fff7ed;  --run-fg: #c2410c;
+      --lift-bg: #eff6ff; --lift-fg: #1d4ed8;
+      --combo-bg: #fdf4ff; --combo-fg: #a21caf;
+      --rest-bg: #f8fafc;  --rest-fg: #64748b;
+      --bike-bg: #f0fdf4;  --bike-fg: #15803d;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      background: #0f172a;
+      color: #fff;
+      padding: 18px 20px 16px;
+      padding-top: max(18px, env(safe-area-inset-top));
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    header p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .days {
+      padding: 14px 14px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .day-card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 16px;
+      border: 2px solid transparent;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: border-color 0.2s;
+    }
+
+    .day-card.today {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 4px 16px rgba(79,70,229,0.12);
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .day-name { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+    .day-date { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    .today-badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      margin-top: 2px;
+    }
+
+    .activity-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px 11px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+    }
+
+    .pill-fast  { background: var(--fast-bg);  color: var(--fast-fg); }
+    .pill-run   { background: var(--run-bg);   color: var(--run-fg); }
+    .pill-lift  { background: var(--lift-bg);  color: var(--lift-fg); }
+    .pill-combo { background: var(--combo-bg); color: var(--combo-fg); }
+    .pill-rest  { background: var(--rest-bg);  color: var(--rest-fg); border: 1px solid var(--border); }
+    .pill-bike  { background: var(--bike-bg);  color: var(--bike-fg); }
+
+    .activity-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .exercises-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 4px;
+    }
+
+    .exercise-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 28px;
+    }
+
+    .exercise-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .exercise-label {
+      flex: 1;
+      font-size: 15px;
+      line-height: 1.35;
+      cursor: pointer;
+    }
+
+    .exercise-label.done {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .del-btn {
+      background: none;
+      border: none;
+      color: #cbd5e1;
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 2px;
+      flex-shrink: 0;
+      transition: color 0.15s;
+    }
+    .del-btn:hover, .del-btn:active { color: #ef4444; }
+
+    .add-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 0 4px;
+    }
+
+    .add-row {
+      display: none;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .add-row.visible { display: flex; }
+
+    .add-input {
+      flex: 1;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .add-input:focus { border-color: var(--accent); }
+
+    .add-submit {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .add-submit:active { opacity: 0.8; }
+
+    .notes-section {
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+    }
+
+    .notes-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .notes-input {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--bg);
+      resize: none;
+      min-height: 56px;
+      outline: none;
+      line-height: 1.5;
+      transition: border-color 0.15s;
+    }
+    .notes-input:focus { border-color: var(--accent); }
+    .notes-input::placeholder { color: #cbd5e1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Weekly Workout</h1>
+  <p id="week-label"></p>
+</header>
+
+<div class="days" id="days-container"></div>
+
+<script>
+  const SCHEDULE = [
+    { key: 'monday',    name: 'Monday',    pill: 'pill-fast',  icon: '🍽',  label: 'Fast Day',                note: 'Walking only. Break fast at dinner.' },
+    { key: 'tuesday',   name: 'Tuesday',   pill: 'pill-run',   icon: '🏃',  label: 'Hard Intervals Run',      note: 'Later in the day.' },
+    { key: 'wednesday', name: 'Wednesday', pill: 'pill-lift',  icon: '🏋️', label: 'Heavy Lift',              note: 'Morning.' },
+    { key: 'thursday',  name: 'Thursday',  pill: 'pill-combo', icon: '🏃🏋️', label: 'Easy Run + Lift',        note: 'Morning.' },
+    { key: 'friday',    name: 'Friday',    pill: 'pill-rest',  icon: '😴',  label: 'Rest',                    note: 'Walking only.' },
+    { key: 'saturday',  name: 'Saturday',  pill: 'pill-lift',  icon: '🏋️', label: 'Lift or Zone 2 Bike',    note: 'Short third lift or zone 2 bike. Morning.' },
+    { key: 'sunday',    name: 'Sunday',    pill: 'pill-bike',  icon: '🔄',  label: 'Remaining Sat. Option',   note: 'Fast begins at dinner.' },
+  ];
+
+  // Week math
+  function getMonday(d) {
+    const date = new Date(d);
+    const day = date.getDay();
+    date.setDate(date.getDate() - (day === 0 ? 6 : day - 1));
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+
+  const today   = new Date();
+  const monday  = getMonday(today);
+  const weekKey = monday.toISOString().slice(0, 10);
+  const todayJS = today.getDay(); // 0=Sun
+  const todayIdx = todayJS === 0 ? 6 : todayJS - 1; // 0=Mon … 6=Sun
+
+  // Storage
+  function load() {
+    try { return JSON.parse(localStorage.getItem('wk_' + weekKey)) || {}; }
+    catch { return {}; }
+  }
+  function save(d) {
+    localStorage.setItem('wk_' + weekKey, JSON.stringify(d));
+  }
+
+  let store = load();
+  // Ensure structure
+  SCHEDULE.forEach(({ key }) => {
+    if (!store[key]) store[key] = { exercises: [], checks: {}, notes: '' };
+  });
+
+  // Header
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  document.getElementById('week-label').textContent = `${fmt(monday)} – ${fmt(sunday)}`;
+
+  // Build cards
+  SCHEDULE.forEach((day, idx) => {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + idx);
+    const isToday = idx === todayIdx;
+
+    const card = document.createElement('div');
+    card.className = 'day-card' + (isToday ? ' today' : '');
+    card.id = 'card-' + day.key;
+
+    card.innerHTML = `
+      <div class="day-header">
+        <div>
+          <div class="day-name">${day.name}</div>
+          <div class="day-date">${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</div>
+        </div>
+        ${isToday ? '<span class="today-badge">TODAY</span>' : ''}
+      </div>
+      <span class="activity-pill ${day.pill}">${day.icon} ${day.label}</span>
+      <div class="activity-note">${day.note}</div>
+      <div class="exercises-list" id="list-${day.key}"></div>
+      <button class="add-trigger" onclick="openAdd('${day.key}')">＋ Add exercise</button>
+      <div class="add-row" id="add-row-${day.key}">
+        <input class="add-input" id="add-input-${day.key}" type="text" placeholder="e.g. 4×400m repeats"
+          onkeydown="if(event.key==='Enter') submitAdd('${day.key}')">
+        <button class="add-submit" onclick="submitAdd('${day.key}')">Add</button>
+      </div>
+      <div class="notes-section">
+        <div class="notes-label">Notes</div>
+        <textarea class="notes-input" id="notes-${day.key}" placeholder="How'd it go?">${store[day.key].notes}</textarea>
+      </div>
+    `;
+
+    document.getElementById('days-container').appendChild(card);
+    renderList(day.key);
+
+    document.getElementById('notes-' + day.key).addEventListener('input', e => {
+      store[day.key].notes = e.target.value;
+      save(store);
+    });
+  });
+
+  // Scroll to today
+  const todayCard = document.getElementById('card-' + SCHEDULE[todayIdx]?.key);
+  if (todayCard) setTimeout(() => todayCard.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+
+  function renderList(key) {
+    const list = document.getElementById('list-' + key);
+    if (!list) return;
+    const { exercises, checks } = store[key];
+    list.innerHTML = '';
+    exercises.forEach((ex, i) => {
+      const checked = !!checks[i];
+      const row = document.createElement('div');
+      row.className = 'exercise-item';
+      row.innerHTML = `
+        <input type="checkbox" id="chk-${key}-${i}" ${checked ? 'checked' : ''}
+          onchange="toggleCheck('${key}', ${i}, this.checked)">
+        <label class="exercise-label${checked ? ' done' : ''}" for="chk-${key}-${i}">${escHtml(ex)}</label>
+        <button class="del-btn" onclick="deleteEx('${key}', ${i})" aria-label="Delete">×</button>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function openAdd(key) {
+    const row = document.getElementById('add-row-' + key);
+    row.classList.add('visible');
+    document.getElementById('add-input-' + key).focus();
+  }
+
+  function submitAdd(key) {
+    const input = document.getElementById('add-input-' + key);
+    const val = input.value.trim();
+    if (!val) return;
+    store[key].exercises.push(val);
+    save(store);
+    input.value = '';
+    renderList(key);
+  }
+
+  function toggleCheck(key, idx, checked) {
+    store[key].checks[idx] = checked;
+    save(store);
+    const label = document.querySelector(`label[for="chk-${key}-${idx}"]`);
+    if (label) label.className = 'exercise-label' + (checked ? ' done' : '');
+  }
+
+  function deleteEx(key, idx) {
+    store[key].exercises.splice(idx, 1);
+    // Re-index checks
+    const old = store[key].checks;
+    const fresh = {};
+    Object.entries(old).forEach(([k, v]) => {
+      const ki = +k;
+      if (ki < idx) fresh[ki] = v;
+      else if (ki > idx) fresh[ki - 1] = v;
+    });
+    store[key].checks = fresh;
+    save(store);
+    renderList(key);
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+
+</body>
+</html>
