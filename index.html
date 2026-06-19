@@ -20,7 +20,6 @@
       --muted: #64748b;
       --border: #e2e8f0;
       --accent: #4f46e5;
-      --accent-light: #eef2ff;
 
       --fast-bg: #faf5ff; --fast-fg: #7c3aed;
       --run-bg: #fff7ed;  --run-fg: #c2410c;
@@ -47,18 +46,8 @@
       top: 0;
       z-index: 100;
     }
-
-    header h1 {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.4px;
-    }
-
-    header p {
-      font-size: 13px;
-      color: #94a3b8;
-      margin-top: 2px;
-    }
+    header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
+    header p  { font-size: 13px; color: #94a3b8; margin-top: 2px; }
 
     .days {
       padding: 14px 14px 48px;
@@ -73,9 +62,7 @@
       padding: 16px;
       border: 2px solid transparent;
       box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-      transition: border-color 0.2s;
     }
-
     .day-card.today {
       border-color: var(--accent);
       box-shadow: 0 0 0 1px var(--accent), 0 4px 16px rgba(79,70,229,0.12);
@@ -87,7 +74,6 @@
       align-items: flex-start;
       margin-bottom: 10px;
     }
-
     .day-name { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
     .day-date { font-size: 12px; color: var(--muted); margin-top: 1px; }
 
@@ -102,6 +88,14 @@
       margin-top: 2px;
     }
 
+    .pill-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
     .activity-pill {
       display: inline-flex;
       align-items: center;
@@ -110,9 +104,7 @@
       font-weight: 600;
       padding: 5px 11px;
       border-radius: 20px;
-      margin-bottom: 6px;
     }
-
     .pill-fast  { background: var(--fast-bg);  color: var(--fast-fg); }
     .pill-run   { background: var(--run-bg);   color: var(--run-fg); }
     .pill-lift  { background: var(--lift-bg);  color: var(--lift-fg); }
@@ -120,13 +112,35 @@
     .pill-rest  { background: var(--rest-bg);  color: var(--rest-fg); border: 1px solid var(--border); }
     .pill-bike  { background: var(--bike-bg);  color: var(--bike-fg); }
 
+    .duration-tag {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
     .activity-note {
       font-size: 13px;
       color: var(--muted);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       line-height: 1.5;
     }
 
+    /* Built-in sections (supersets) */
+    .sections-container { margin-bottom: 4px; }
+
+    .section-group { margin-top: 14px; }
+    .section-group:first-child { margin-top: 6px; }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    /* Exercises (both built-in and user-added) */
     .exercises-list {
       display: flex;
       flex-direction: column;
@@ -140,27 +154,20 @@
       gap: 10px;
       min-height: 28px;
     }
-
     .exercise-item input[type="checkbox"] {
       width: 20px;
       height: 20px;
       flex-shrink: 0;
       accent-color: var(--accent);
       cursor: pointer;
-      border-radius: 6px;
     }
-
     .exercise-label {
       flex: 1;
       font-size: 15px;
       line-height: 1.35;
       cursor: pointer;
     }
-
-    .exercise-label.done {
-      text-decoration: line-through;
-      color: var(--muted);
-    }
+    .exercise-label.done { text-decoration: line-through; color: var(--muted); }
 
     .del-btn {
       background: none;
@@ -175,6 +182,13 @@
     }
     .del-btn:hover, .del-btn:active { color: #ef4444; }
 
+    /* User-added exercise separator */
+    .user-exercises-divider {
+      border: none;
+      border-top: 1px dashed var(--border);
+      margin: 12px 0 8px;
+    }
+
     .add-trigger {
       display: inline-flex;
       align-items: center;
@@ -188,12 +202,7 @@
       padding: 8px 0 4px;
     }
 
-    .add-row {
-      display: none;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
+    .add-row { display: none; gap: 8px; margin-top: 6px; }
     .add-row.visible { display: flex; }
 
     .add-input {
@@ -221,16 +230,15 @@
       font-family: inherit;
       cursor: pointer;
       white-space: nowrap;
-      transition: opacity 0.15s;
     }
     .add-submit:active { opacity: 0.8; }
 
+    /* Notes */
     .notes-section {
       margin-top: 8px;
       border-top: 1px solid var(--border);
       padding-top: 4px;
     }
-
     .notes-trigger {
       display: inline-flex;
       align-items: center;
@@ -244,14 +252,9 @@
       padding: 8px 0 4px;
       font-family: inherit;
     }
-    .notes-trigger.has-note { color: var(--text); font-weight: 500; }
-
-    .notes-body {
-      display: none;
-      margin-top: 6px;
-    }
+    .notes-trigger.has-note { color: var(--text); }
+    .notes-body { display: none; margin-top: 6px; }
     .notes-body.open { display: block; }
-
     .notes-input {
       width: 100%;
       border: 1.5px solid var(--border);
@@ -282,16 +285,96 @@
 
 <script>
   const SCHEDULE = [
-    { key: 'monday',    name: 'Monday',    pill: 'pill-combo', icon: '🍽🏋️', label: 'Fast Day + Easy Lift',   note: 'Break fast at dinner. Easy lift after.' },
-    { key: 'tuesday',   name: 'Tuesday',   pill: 'pill-run',   icon: '🏃',   label: 'Hard Intervals Run',     note: '' },
-    { key: 'wednesday', name: 'Wednesday', pill: 'pill-rest',  icon: '😴',   label: 'Rest',                   note: 'Walking only.' },
-    { key: 'thursday',  name: 'Thursday',  pill: 'pill-lift',  icon: '🏋️',  label: 'Heavy Lift',             note: 'Morning.' },
-    { key: 'friday',    name: 'Friday',    pill: 'pill-run',   icon: '🏃',   label: 'Easy Run',               note: 'Morning.' },
-    { key: 'saturday',  name: 'Saturday',  pill: 'pill-lift',  icon: '🏋️',  label: 'Short Lift',             note: 'Morning.' },
-    { key: 'sunday',    name: 'Sunday',    pill: 'pill-bike',  icon: '🚴',   label: 'Long Zone 2 Bike',       note: 'Fast begins at dinner.' },
+    {
+      key: 'monday', name: 'Monday', pill: 'pill-combo', icon: '🍽🏋️',
+      label: 'Fast Day + Easy Lift', note: 'Break fast at dinner. Easy lift after.',
+      duration: '30 min · 3 sets each',
+      sections: [
+        { title: 'Superset 1: Hinge + Pull', exercises: [
+          'Single leg RDL (15–20s)',
+          'Bent over row (15–20s)'
+        ]},
+        { title: 'Superset 2: Squat + Push', exercises: [
+          'Reverse lunge (15–20s)',
+          'Overhead press (light)'
+        ]},
+        { title: 'Superset 3: Hip + Core', exercises: [
+          'Banded lateral walks',
+          'Dead bug'
+        ]},
+        { title: 'Core finisher (one round)', exercises: [
+          'Plank 45 seconds',
+          'Russian twist 20 reps',
+          'Side plank 30 seconds each side'
+        ]}
+      ]
+    },
+    {
+      key: 'tuesday', name: 'Tuesday', pill: 'pill-run', icon: '🏃',
+      label: 'Hard Intervals Run', note: ''
+    },
+    {
+      key: 'wednesday', name: 'Wednesday', pill: 'pill-rest', icon: '😴',
+      label: 'Rest', note: 'Walking only.'
+    },
+    {
+      key: 'thursday', name: 'Thursday', pill: 'pill-lift', icon: '🏋️',
+      label: 'Heavy Lift', note: 'Morning.',
+      duration: '40 min · 3 sets each',
+      sections: [
+        { title: 'Superset 1: Hinge + Push', exercises: [
+          'Single leg Romanian deadlift (25s)',
+          'Chest press (25s)'
+        ]},
+        { title: 'Superset 2: Squat + Pull', exercises: [
+          'Bulgarian split squat or curtsy lunge (25s)',
+          'Lawnmower row (25s)'
+        ]},
+        { title: 'Superset 3: Squat + Press', exercises: [
+          'Sumo squat (25s)',
+          'Overhead press (lighter)'
+        ]},
+        { title: 'Superset 4: Hip + Core', exercises: [
+          'Banded clamshells',
+          'Pallof press hold (band anchored to something stable)'
+        ]},
+        { title: 'Core finisher (one round)', exercises: [
+          'Dead bug 10 reps',
+          'Side plank with hip dip 30 seconds each side',
+          'Bicycle crunches 20 reps'
+        ]}
+      ]
+    },
+    {
+      key: 'friday', name: 'Friday', pill: 'pill-run', icon: '🏃',
+      label: 'Easy Run', note: 'Morning.'
+    },
+    {
+      key: 'saturday', name: 'Saturday', pill: 'pill-lift', icon: '🏋️',
+      label: 'Short Lift', note: 'Morning.',
+      duration: '20–25 min · 3 sets each',
+      sections: [
+        { title: 'Superset 1: Hinge + Hip', exercises: [
+          'Single leg RDL (moderate weight)',
+          'Banded glute bridge'
+        ]},
+        { title: 'Superset 2: Squat + Carry', exercises: [
+          'Goblet squat (one heavy dumbbell)',
+          'Farmers carry (25s, 20–30 steps)'
+        ]},
+        { title: 'Core finisher (one round)', exercises: [
+          'Pallof press 10 reps each side',
+          'Dead bug 10 reps',
+          'Bicycle crunches 20 reps'
+        ]}
+      ]
+    },
+    {
+      key: 'sunday', name: 'Sunday', pill: 'pill-bike', icon: '🚴',
+      label: 'Long Zone 2 Bike', note: 'Fast begins at dinner.'
+    },
   ];
 
-  // Week math
   function getMonday(d) {
     const date = new Date(d);
     const day = date.getDay();
@@ -300,34 +383,29 @@
     return date;
   }
 
-  const today   = new Date();
-  const monday  = getMonday(today);
-  const weekKey = monday.toISOString().slice(0, 10);
-  const todayJS = today.getDay(); // 0=Sun
-  const todayIdx = todayJS === 0 ? 6 : todayJS - 1; // 0=Mon … 6=Sun
+  const today    = new Date();
+  const monday   = getMonday(today);
+  const weekKey  = monday.toISOString().slice(0, 10);
+  const todayJS  = today.getDay();
+  const todayIdx = todayJS === 0 ? 6 : todayJS - 1;
 
-  // Storage
   function load() {
     try { return JSON.parse(localStorage.getItem('wk_' + weekKey)) || {}; }
     catch { return {}; }
   }
-  function save(d) {
-    localStorage.setItem('wk_' + weekKey, JSON.stringify(d));
-  }
+  function save(d) { localStorage.setItem('wk_' + weekKey, JSON.stringify(d)); }
 
   let store = load();
-  // Ensure structure
   SCHEDULE.forEach(({ key }) => {
-    if (!store[key]) store[key] = { exercises: [], checks: {}, notes: '' };
+    if (!store[key]) store[key] = { exercises: [], checks: {}, sectionChecks: {}, notes: '' };
+    if (!store[key].sectionChecks) store[key].sectionChecks = {};
   });
 
-  // Header
   const sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
   const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   document.getElementById('week-label').textContent = `${fmt(monday)} – ${fmt(sunday)}`;
 
-  // Build cards
   SCHEDULE.forEach((day, idx) => {
     const date = new Date(monday);
     date.setDate(monday.getDate() + idx);
@@ -345,8 +423,12 @@
         </div>
         ${isToday ? '<span class="today-badge">TODAY</span>' : ''}
       </div>
-      <span class="activity-pill ${day.pill}">${day.icon} ${day.label}</span>
-      <div class="activity-note">${day.note}</div>
+      <div class="pill-row">
+        <span class="activity-pill ${day.pill}">${day.icon} ${day.label}</span>
+        ${day.duration ? `<span class="duration-tag">${day.duration}</span>` : ''}
+      </div>
+      ${day.note ? `<div class="activity-note">${day.note}</div>` : ''}
+      <div class="sections-container" id="sections-${day.key}"></div>
       <div class="exercises-list" id="list-${day.key}"></div>
       <button class="add-trigger" onclick="openAdd('${day.key}')">＋ Add exercise</button>
       <div class="add-row" id="add-row-${day.key}">
@@ -363,6 +445,7 @@
     `;
 
     document.getElementById('days-container').appendChild(card);
+    renderSections(day.key);
     renderList(day.key);
     updateNotesTrigger(day.key);
 
@@ -373,15 +456,68 @@
     });
   });
 
-  // Scroll to today
   const todayCard = document.getElementById('card-' + SCHEDULE[todayIdx]?.key);
   if (todayCard) setTimeout(() => todayCard.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+
+  function renderSections(key) {
+    const container = document.getElementById('sections-' + key);
+    if (!container) return;
+    const day = SCHEDULE.find(d => d.key === key);
+    if (!day?.sections?.length) return;
+
+    const sc = store[key].sectionChecks || {};
+    container.innerHTML = '';
+
+    day.sections.forEach((section, si) => {
+      const group = document.createElement('div');
+      group.className = 'section-group';
+
+      const title = document.createElement('div');
+      title.className = 'section-title';
+      title.textContent = section.title;
+      group.appendChild(title);
+
+      section.exercises.forEach((ex, ei) => {
+        const ck = `${si}_${ei}`;
+        const checked = !!sc[ck];
+        const row = document.createElement('div');
+        row.className = 'exercise-item';
+        row.innerHTML = `
+          <input type="checkbox" id="sc-${key}-${si}-${ei}" ${checked ? 'checked' : ''}
+            onchange="toggleSectionCheck('${key}', ${si}, ${ei}, this.checked)">
+          <label class="exercise-label${checked ? ' done' : ''}" for="sc-${key}-${si}-${ei}">${escHtml(ex)}</label>
+        `;
+        group.appendChild(row);
+      });
+
+      container.appendChild(group);
+    });
+  }
+
+  function toggleSectionCheck(key, si, ei, checked) {
+    if (!store[key].sectionChecks) store[key].sectionChecks = {};
+    store[key].sectionChecks[`${si}_${ei}`] = checked;
+    save(store);
+    const label = document.querySelector(`label[for="sc-${key}-${si}-${ei}"]`);
+    if (label) label.className = 'exercise-label' + (checked ? ' done' : '');
+  }
 
   function renderList(key) {
     const list = document.getElementById('list-' + key);
     if (!list) return;
     const { exercises, checks } = store[key];
+
+    // Show dashed divider above user exercises only if there are built-in sections
+    const day = SCHEDULE.find(d => d.key === key);
+    const hasSections = day?.sections?.length > 0;
+
     list.innerHTML = '';
+    if (hasSections && exercises.length > 0) {
+      const hr = document.createElement('hr');
+      hr.className = 'user-exercises-divider';
+      list.appendChild(hr);
+    }
+
     exercises.forEach((ex, i) => {
       const checked = !!checks[i];
       const row = document.createElement('div');
@@ -397,8 +533,7 @@
   }
 
   function openAdd(key) {
-    const row = document.getElementById('add-row-' + key);
-    row.classList.add('visible');
+    document.getElementById('add-row-' + key).classList.add('visible');
     document.getElementById('add-input-' + key).focus();
   }
 
@@ -421,7 +556,6 @@
 
   function deleteEx(key, idx) {
     store[key].exercises.splice(idx, 1);
-    // Re-index checks
     const old = store[key].checks;
     const fresh = {};
     Object.entries(old).forEach(([k, v]) => {
@@ -432,10 +566,6 @@
     store[key].checks = fresh;
     save(store);
     renderList(key);
-  }
-
-  function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   function toggleNotes(key) {
@@ -463,6 +593,10 @@
       trigger.textContent = '＋ Add note';
       trigger.className = 'notes-trigger';
     }
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 </script>
 
