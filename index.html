@@ -352,12 +352,12 @@
         ]},
         { title: 'Superset 4: Hip + Core', exercises: [
           'Banded clamshells',
-          'Pallof press hold (band anchored to something stable)'
+          'Plank with shoulder taps x20 (10 each side)'
         ]},
         { title: 'Core finisher (one round)', exercises: [
-          'Dead bug 10 reps',
+          'Dead bug x20 (10 each side)',
           'Side plank with hip dip 30 seconds each side',
-          'Bicycle crunches 20 reps'
+          'Bicycle crunches x20 (10 each side)'
         ]}
       ]
     },
@@ -394,7 +394,9 @@
   function getMonday(d) {
     const date = new Date(d);
     const day = date.getDay();
-    date.setDate(date.getDate() - (day === 0 ? 6 : day - 1));
+    if (day === 6) date.setDate(date.getDate() + 2);      // Saturday → next Monday
+    else if (day === 0) date.setDate(date.getDate() + 1); // Sunday → tomorrow
+    else date.setDate(date.getDate() - (day - 1));        // Mon–Fri → this week's Monday
     date.setHours(0, 0, 0, 0);
     return date;
   }
@@ -403,7 +405,8 @@
   const monday   = getMonday(today);
   const weekKey  = monday.toISOString().slice(0, 10);
   const todayJS  = today.getDay();
-  const todayIdx = todayJS === 0 ? 6 : todayJS - 1;
+  // On Sat/Sun we're viewing next week — no day is "today"
+  const todayIdx = (todayJS === 0 || todayJS === 6) ? -1 : todayJS - 1;
 
   function load() {
     try { return JSON.parse(localStorage.getItem('wk_' + weekKey)) || {}; }
